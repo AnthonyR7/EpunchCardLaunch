@@ -1,0 +1,442 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.wrapper{
+   width: 100% auto;
+   background-color: #DCE6E8;
+   margin: 0px auto;
+   padding: 15px;
+   /* text-align: center; */
+   padding-top: 10px;
+   padding-bottom: 75px;
+   position: relative;
+}
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #182a39;
+    text-align: center;
+    border-radius: 25px;
+}
+ul li{
+    display: inline-block;
+}
+ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 30px 174px;
+    text-decoration: none;
+}  
+/* Change the link color to #111 (black) on hover */
+ul li a:hover {
+    background-color: #13222e;
+}
+#dates, #eNameSelector{
+    margin-bottom: 50px;
+}
+.staffMember{
+    background-color: #DCE6E8;
+    width: 350px;
+    height: 602px;
+    display: inline-block;
+    vertical-align: left;
+    overflow: auto;
+    margin-top: 10px;
+    color: whitesmoke;
+}
+
+
+#user{
+    background-color: #364756;
+    height: 160px;
+    width: 100% auto;
+    border-radius: 25px;
+}
+#clockMod{
+    background-color: #364756;
+    height: 160px;
+    width: 100% auto;
+}
+#pointsQuote{
+    background-color: #364756;
+    height: 431px;
+    width:  100% auto;
+    border-radius: 25px;
+    margin-top: 10px;
+}
+
+.dailyUpdate{
+    background-color: #364756;
+    height: 600px;
+    width: 960px;
+    display: inline-block;
+    vertical-align: top;
+    vertical-align: right;
+    margin-left: 5px;
+    text-align: left;
+    overflow: auto;
+    border-radius: 25px;
+    margin-top: 10px;
+}
+
+
+label{
+    display: block;
+}
+
+#manualTimer{
+    background-color: yellowgreen;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    top:20%;
+    right:0;
+    left:0;
+    margin:-50px auto 0 auto;
+}
+#search-bar{
+    display: inline-block;
+    margin-left: 420px;
+    width: 300px;
+}
+.dailyUpdate h2{
+    display: inline-block;
+    margin-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 35px;
+}
+.dailyUpdate #addEmployee{
+    width: 100px;
+    margin-left: 840px;
+    margin-bottom: 10px;
+}
+/* table {
+    overflow-y:scroll;
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    display: block;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+} */
+
+
+#ae-employee{
+    background-color: pink;
+    height: 400px;
+    width: 920px;
+    position: absolute;
+    top:20%;
+    right:0;
+    left:0;
+    margin:-50px auto 0 auto;
+    /* text-align: center; */
+}
+#ae-employee #wholeForm{
+    display: inline-block;
+    width: 660px;
+    height: 300px;
+    background-color: yellowgreen;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+#ae-employee #person{
+    text-align: center;
+    background-color: chocolate;
+    width: 200px;
+    height: 300px;
+    display: inline-block;
+    margin-left: 15px;
+    vertical-align: top;
+}
+#ae-employee button{
+    display: block;
+    margin-top: 10px;
+    margin-left: 810px;
+    width: 100px;
+    height: 20px;
+    color: red;
+}
+#ae-employee #eform{
+    padding-left: 10px;
+    width: 300px;
+    height: 250px;
+    display: inline-block;
+    background-color: rgb(110, 17, 197);
+}
+#ae-employee ul li{
+    padding-top: 20px;
+}
+#ae-employee ul{
+    text-align: left;
+}
+#ae-employee #pform{
+    margin-left: 10px;
+    padding-left: 10px;
+    width: 300px;
+    height: 250px;
+    display: inline-block;
+    background-color: rgb(199, 109, 109);
+}
+#ae-employee  #subButton{
+    display: block;
+    margin-top: 10px;
+    margin-left: 485px;
+    width: 150px;
+}
+.dailyUpdate table #editB{
+    display: inline-block;
+    margin-left: 20px;
+    width: 40px;
+}
+.dailyUpdate table #addB{
+    display: inline-block;
+    width: 25px;
+}
+.updateViewer{
+    background-color: #304250;
+    height: 470px;
+    width: 796px;
+    position: absolute;
+    top:32%;
+    right:0;
+    left:14%;
+    margin:-50px auto 0 auto;
+    text-align: center;
+    border-style: solid;
+    border-radius: 25px;
+    border-color: black;
+}
+#buttonViewer {
+    background:none;
+    color:inherit;
+    border:none; 
+    padding:0;
+    font: inherit;
+    /*border is optional*/
+    border-bottom:1px solid #444; 
+    cursor: pointer;
+}
+#exitButton{
+    width: 80px;
+    height: 27px;
+    display: inline-block;
+    border-radius: 25px;
+    margin-top: 15px;
+}
+#employeeInfo{
+    width: 250px;
+    height: 340px;
+    background-color: #364756;
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    border-radius: 25px;
+    border-style: solid;
+    border-color: black;
+    margin-top: 20px;
+}
+.employeeDesc{
+    background-color: #364756;
+    width: 450px;
+    height: 340px;
+    display: inline-block;
+    border-radius: 25px;
+    border-style: solid;
+    border-color: black;
+    margin-top: 20px;
+}
+#employeeInfo h3, p, h2, h4{
+    padding-top: 15px;
+}
+#employeeInfo button{
+    margin-top: 15px;
+    border-radius: 25px;
+    width: 105px;
+}
+
+.employeeDesc #todayBox, #challengeBox, #helpBox{
+    padding-top: 20px;
+}
+.employeeDesc p{
+    padding-top: 15px;
+}
+.awardModelViewer{
+    width: 600px;
+    height: 300px;
+    background-color: #304250;
+    position: absolute;
+    top:47%;
+    left:65;
+    margin:-100px auto 0 auto;
+    border-style: solid;
+    border-radius: 25px;
+    border-color: black;
+}
+.awardModelViewer #info{
+    text-align: center;
+    display: inline-block;
+    width: 250px;
+    height: 300px;
+    border-radius: 25px;
+}
+.awardModelViewer #pointsForm{
+    text-align: left;
+    display: inline-block;
+    width: 280px;
+    height: 300px;
+    vertical-align: top;
+    border-radius: 25px;
+}
+.awardModelViewer button{
+    vertical-align: top;
+    width: 50px;
+    height: 25px;
+    margin-top: 10px;
+    border-radius: 25px;
+}
+/* .awardModelViewer #info p{
+    margin-top: 40px;
+} */
+.awardModelViewer #pointsForm h2{
+    margin-top: 40px;
+}
+.awardModelViewer #pointsForm input, textarea{
+    margin-top: 15px;
+}
+.awardModelViewer #pointsForm h2, input, textarea{
+    margin-left: 25px;
+    display: block;
+}
+.awardModelViewer #pointsForm #subButton{
+    margin-left: 145px;
+    width: 50px;
+}
+#currentUserData{
+    overflow: auto;
+    background-color: #364756;
+    color: whitesmoke;
+    display: inherit;
+    margin-top: 10px;
+    table-layout: fixed;
+
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+#currentUserData tr:nth-child(even) {
+    background-color: #182A39;
+}
+#currentUserData tr:hover {
+    background-color: #DCE6E8;
+    color: #182a39;
+}
+#employeeData{
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+}
+@media screen and (min-width: 300px) and (max-width: 759px){
+    ul li a{
+        padding: 16px 90px;
+    }
+    .staffMember{
+        width: 100%;
+        height: 100%;
+    }
+    .dailyUpdate{
+        margin-left: 0px;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+    .dailyUpdate h2{
+        display: block;
+    }
+    .updateViewer{
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    #employeeInfo{
+        width: 100%;
+        height: 157px;
+    }
+    .employeeDesc{
+        width: 100%;
+        height: 508px;
+        overflow-y: auto;
+    }
+    #todayBox, #challengeBox, #helpBox{
+        width: 100%;
+        height: 100px;
+    }
+    #exitButton{
+        width: 142px;
+        margin-top: 25px;
+    }
+    .awardModelViewer{
+        right: 0%;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        
+    }
+    .awardModelViewer #info{
+        display: none;
+        visibility: hidden;
+    }
+    .awardModelViewer button{
+        width: 134px;
+        height: 54px;
+    }
+    #pointsForm{
+        margin-top: 15px;
+    }
+    #subButton{
+        width: 99px;
+        height: 44px;
+    }
+}
+@media screen and (min-width: 760px) and (max-width: 850px){
+    .staffMember{
+        width: 100%;
+        height: 300px;
+        display: block;
+    }
+    .dailyUpdate{
+        margin-left: 0px;
+        width: 100%;
+    }
+    .updateViewer{
+        width: 100%;
+        height: 700px;
+        top: 24%;
+        text-align: center;
+    }
+    #employeeInfo{
+        width: 100%;
+        height: 180px;
+        display: block;
+    }
+    .employeeDesc{
+        width: 100%;
+        height: 445px;
+        display: block;
+    }
+    .awardModelViewer{
+        top: 32%;
+    }
+}

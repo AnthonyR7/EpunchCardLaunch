@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Points</title>
+    {% load static %}
+    <link rel = "styleSheet" type ="text/css" href="{% static 'EpunchCard/pointsStyle.css' %}">
+</head>
+<body>
+    <div class = "wrapper">
+        <ul>
+            <li><a href="/dashboard" >Clock In/Out</a></li>
+            <li><a href="/points">Points</a></li>
+            <li><a href="/dailyReport">Daily Report</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+        <div class = "staffMember">
+            <div id = "user" >
+                <h1>Welcome to the Dashboard {{ name }}</h1>
+            </div>
+            <div id = "clockMod" >
+                <button>Clock in/out</button>
+                <a href="/manualMod">Forgot to clock out Yesterday?</a>
+            </div>
+            <div id = "pointsQuote" >
+                <h2>My Points</h2>
+                <h2>Village Points</h2>
+                <p>Happies lies not in the mere passion of money,
+                    but in the joy of achievement, in the thrill of
+                    creative effort - Franklin Roosevelt
+                </p>
+            </div>
+        </div>
+        <div class = "data" >
+                <div id = "clockFunction" >
+                    <h2>Points</h2>
+                    <select id = "dates">
+                        <option value="thisW">This week</option>
+                        <option value="lastW">Last Week</option>
+                        <option value="ThisM">This Month</option>
+                        <option value="LastM">Last Month</option>
+                    </select> 
+                    <select id = "employee">
+                        <option value="Demilo">Demilo</option>
+                        <option value="Tony">Tony</option>
+                        <option value="Edgar">Edgar</option>
+                        <option value="David">David</option>
+                    </select>
+                </div>
+                <div id = "graph"></div>
+                <div  style="overflow-x:auto;" id = "tableD">
+                    <table>
+                        <tr>
+                            <th>Date</th>
+                            <th>Hours Spent</th>
+                            <th>Points Earned</th>
+                            <th>Awarded By</th>
+                        </tr>
+                        <tr>
+                            <td>5/15/2019</td>
+                            <td>8</td>
+                            <td>33</td>
+                            <td>Anthony</td>
+                        </tr>
+                        <tr>
+                            <td>7/25/2019</td>
+                            <td>8</td>
+                            <td>45</td>
+                            <td>System</td>
+                        </tr>
+                        <tr>
+                            <td>7/26/2019</td>
+                            <td>8</td>
+                            <td>5</td>
+                            <td>System</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        
+    </div>
+</body>
+</html>

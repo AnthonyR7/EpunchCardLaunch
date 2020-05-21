@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Settings</title>
+    {% load static %}
+    <link rel = "styleSheet" type ="text/css" href="{% static 'EpunchCard/SettingsStyle.css' %}">
+    <script src = "{% static 'EpunchCardJS/jquery-3.4.1.min.js' %}"></script>
+    <script src = "{% static 'EpunchCardJS/moment.js' %}"></script>
+
+</head>
+<script type = "text/javascript">
+    // When reload happens, scroll position stays the same
+    window.addEventListener('scroll',function() {
+            //When scroll change, you save it on sessionStorage.
+            sessionStorage.setItem('scrollPosition',window.scrollY);
+        },false);
+
+    window.addEventListener('load',function() {
+        if(sessionStorage.getItem('scrollPosition') !== null)
+        window.scrollTo(0, sessionStorage.getItem('scrollPosition'));
+    },false);
+    
+    function getCookie(c_name){
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                    return unescape(document.cookie.substring(c_start,c_end));
+                }
+        }  
+        return "";
+    }
+    function checkYesterDay(){
+        $.ajax({
+            url: '/checkClockOut',
+            type: 'POST',
+            headers: {"X-CSRFToken" : getCookie("csrftoken")},
+            success: function(serverResponse){
+                console.log("1: " , serverResponse)
+                // Fills drop down menu with array
+                if (serverResponse[1] == true){
+                    document.getElementById("yesterDayFeed").innerHTML = "Yesterday you clocked in at " + serverResponse[0]
+
+                    // document.getElementById("clockOutButton").setAttribute("style", "display: none; visibility: hidden;");
+
+                    document.getElementsByClassName("previousDay")[0].setAttribute("style", "display: inline-block; visibility: visible")
+                    // console.log(serverResponse[0])
+                    const locale = 'en';
+                    const hours = [];
+
+                    moment.locale(locale);  // optional - can remove if you are only dealing with one locale
+
+                    for(let hour = 0; hour < 24; hour++) {
+                        hours.push(moment({ hour }).format('h:mm a'));
+                        hours.push(
+                            moment({
+                                hour,
+                                minute: 30
+                            }).format('h:mm a')
+                        );
+                    }
+
+                    addOption = function(selectbox, text, value) {
+                        var optn = document.createElement("OPTION");
+                        optn.text = text;
+                        optn.value = value;
+                        selectbox.options.add(optn);  
+                    }
+
+                    var dropdown = document.getElementById("previousDayDropBox");
+                    if (dropdown) {
+                        for (var i=0; i < hours.length;++i){    
+                            addOption(dropdown, hours[i], hours[i]);
+                        }
+                    }
+                    
+                }
+                else if (serverResponse[1] == null){
+                    document.getElementById("yesterDayFeed").innerHTML = serverResponse[0];
+                }
+                else{
+                    document.getElementById("yesterDayFeed").innerHTML = serverResponse[0]
+                }
+            },
+            failure: function() {
+                console.log("from check yesterDay, failed for some reason");
+            }
+
+        })
+    }
+    function latePunch(){
+        var descForYesterDay = document.getElementById("previousDayTextBox").value;
+        var lateTime = document.getElementById("previousDayDropBox").value;
+        var lateData = [lateTime, descForYesterDay];
+        var clockButton = document.getElementById("previousDayButton");
+        $.ajax({
+            url: '/latePunchOut',
+            type: 'POST',
+            data: {"getData[]" : lateData},
+            headers: {"X-CSRFToken" : getCookie("csrftoken")},
+            success: function(serverResponse){
+                console.log(serverResponse, " This is from latePunch")
+                clockButton.disabled = true;
+                clockButton.innerHTML = "Day Completed";
+                document.getElementById("previousDayDropBox").setAttribute("style", "display: none; visibility: hidden");
+                document.getElementById("previousDayTextBox").setAttribute("style", "display: none; visibility: hidden");
+
+            },
+            failure: function (err){
+                console.log(err, " There is an problem , from latePunch");
+            }
+        
+        })
+    }
+    function clock(){
+        status = document.getElementById("clockOutButton").innerHTML;
+        // Checking for clock out status to add a description and calculate time diff
+        if (status == "Clock Out") {
+            console.log("Its clocked Out")
+            desc = document.getElementById("desc").value;
+            console.log(desc, "Right Hererersdfsdfsdf");
+            $.ajax({
+                url: "addDesc",
+                type: "POST",
+                headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                data: {"myDesc" : desc},
+                success: function(serverResponse) {
+                    console.log("success with adding description", serverResponse);
+                    document.getElementById("desc").setAttribute("style", "display: none; visibility: hidden");
+                   
+                },
+                failure: function(err){
+                    console.log("ajax has an error", err);
+                }
+            })
+        }
+        else {
+            $.ajax({
+                url: 'timer',
+                type: 'POST',
+                headers: { "X-CSRFToken": getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    console.log("success ajax", serverResponse);
+                    document.getElementById("clockOutButton").innerHTML = "Clock Out";
+                    document.getElementById("clockOutButton").disabled = true;
+
+                    document.getElementById("desc").setAttribute("style", "display: block; visibility: visible");
+
+                },
+                failure: function() { 
+                    console.log('Got an error dude', error);
+                },
+            })
+        }
+    }
+</script>
+<body>
+    <div class = "wrapper">
+        <ul class = "links">
+            <li><a href="/dashboard" >Clock In/Out</a></li>
+            <li><a href="/dailyReport">Daily Report</a></li>
+            <li><a href="/settings" style = "background-color: #13222e; color: white">Settings</a></li>
+            <li id = "responsiveLogOut" ><a href="/logOut">Log Out</a></li>
+        </ul>
+        <div class = "staffMember">
+            <div id = "user" >
+                <h2>Welcome to the Dashboard {{ name }}</h2>
+                <button id = "checkYesterDay" title = "Hello" onclick="checkYesterDay()">Forgot to clock out YesterDay?</button>
+                <p id = "yesterDayFeed"></p>
+            </div>
+            <div class = "previousDay" >
+                <button id = "previousDayButton" onclick="latePunch()">Clock Out</button>
+                <select id = "previousDayDropBox" >
+                    <!-- <option value = "YesterDay">YesterDay</option> -->
+                </select>
+                <textarea id = "previousDayTextBox" placeholder="Task Description" ></textarea>
+            </div>
+            <div id = "clockMod" >
+                <button id = "clockOutButton" onclick="clock()">{{status}}</button>
+                <textarea id = "desc" rows="5" cols="20" placeholder="Task description (wireframs, eps, etc)"></textarea>
+            </div>
+            <div id = "pointsQuote" >
+                <h2>My Points</h2>
+                <h2>Village Points</h2>
+                <p>Happies lies not in the mere passion of money,
+                    but in the joy of achievement, in the thrill of
+                    creative effort - Franklin Roosevelt
+                </p>
+            </div>
+        </div>
+        <div class = "formAndTime">
+            <div class = "PassWordChange" >
+                <form action="/passChange" method = "POST">
+                    {% csrf_token%}
+                    <input type="hidden" name = "passchange" value = "change">
+                        <h2>Reset Passord</h2>
+                        <ul id = "formList">
+                            <li><label for = "prevPass">Previous Password: <input type="text" name = "prevPass"></label></li>
+                            <li><label for = "newPass">New Password: <input type= "text" name = "newPass"></label></li>
+                            <li><label for = "confirmNewPass">Confirm New Password: <input text= "text" name= "confirmNewPass"></label></li>
+                        </ul>
+                    <input type = "submit" value="Reset" id = "subButton">
+                </form>
+                {% if messages %}
+                    <ul class = flashes >
+                        {% for message in messages %}
+                        <li style="color: darkred;" >{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            
+        </div>
+    </div>
+</body>
+<script type = "text/javascript">
+    // Check clock status
+    clockButton = document.getElementById("clockOutButton");
+    console.log(clockButton.innerHTML, " This should work")
+    desc = document.getElementById("desc")
+    if (clockButton.innerHTML == "Clock Out") {
+        desc.setAttribute("style", "display: block; visibility: visible;")
+        clockButton.disabled = true;
+    }
+    if (clockButton.innerHTML == "Day Completed") {
+        clockButton.disabled = true;
+    }
+    desc.onkeyup = function() {
+        var freshDesc = desc.value;
+        noSpaceInV = freshDesc.replace(/\s+/g, '');
+        console.log(noSpaceInV.length)
+
+        if (noSpaceInV.length > 2){
+            clockButton.disabled = false;
+        }
+        else{
+            clockButton.disabled = true;
+        }
+    };
+</script>
+<script type = "text/javascript">
+    var modTimer = document.getElementById("manualTimer");
+    function showOrHide() {
+        if (modTimer.style.display === "none") {
+            console.log("it worked");
+            modTimer.style.display = "block";
+            modTimer.style.visibility = "visible";
+        } else {
+            console.log("else was used");
+            modTimer.style.display = "none";
+            modTimer.style.visibility = "hidden";
+        }
+    }
+    
+</script>
+</html>

@@ -1,0 +1,67 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.wrapper{
+   width: 795px;
+   background-color: silver;
+   margin: 0px auto;
+   padding: 15px;
+   text-align: center;
+   padding-top: 75px;
+   padding-bottom: 75px;
+   margin-top: 36px;
+}
+#reg{
+    background-color: grey;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+#regTitle{
+    margin-bottom: 25px;
+}
+#reg form label{
+    display: inline-block;
+    padding-top: 10px;
+    margin-left: 10px;
+}
+
+#backButton{
+    margin-top: 20px;
+    margin-right: 670px;
+}
+#submitButton{
+    margin-top: 20px;
+    display: block;
+    margin-left: 367px;
+}
+#reg form label{
+    padding-top: 10px;
+}
+@media only screen and (min-width: 360px) and (max-width: 430px){
+    .wrapper{
+        width: auto;
+    }
+    #reg form label{
+        padding-bottom: 20px;
+    }
+    #submitButton{
+        margin-left: 140px;
+        margin-top: none;
+    }
+    #backButton{
+        margin-right: 205px;
+    }
+    #sN{
+        margin-right: 86px;
+    }
+    #sT{
+        margin-right: 95px;
+    }
+    #sE{
+        margin-right: 88px;
+    }
+    #sP{
+        margin-right: 66px;
+    }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Register</title>
+    {% load static %}
+    <link rel = "styleSheet" type= "text/css" href="{% static 'EpunchCard/registerPgStyle.css' %}">
+</head>
+<script type="text/javascript">
+    // document.location.reload(true)
+</script>
+<body>
+    <div class = "wrapper">
+        <h2 id = "regTitle">Please Register</h2>
+        <div id = "reg">
+            <form  action = "/register" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "person" value = "register">
+
+                <label id = "sN" for="name">Name:<input type="text" name="name" id="name"></label>
+                <label id = "sT" for="title">Title:<input type="text" name="title" id="title"></label>
+                <label id = "sE" for="email">Email:<input type="text" name="email" id="email"></label>
+                <label id = "sP" for="password">Password:<input type="text" name="password" id="pass"></label>
+                <label id = "sCp" for="confirm_password">Confirm Password:<input type="text" name="confirm_password" id="confirm"></label>
+                <input id = "submitButton" type="submit" value="Submit">
+                <button id = "backButton" onclick= location.href="/" type="button">Back to login</button>
+
+                {% if messages %}
+                <ul class = flashes >
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</body>
+</html>

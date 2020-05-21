@@ -1,0 +1,487 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.wrapper{
+   width: 100% auto;
+   background-color: #DCE6E8;
+   margin: 0px auto;
+   padding: 15px;
+   /* text-align: center; */
+   padding-top: 10px;
+   padding-bottom: 75px;
+   position: relative;
+}
+button{
+    border-radius: 25px;
+}
+#magicButton{
+    width: 100px;
+    margin-top: 5px;
+}
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #182a39;
+    text-align: center;
+    border-radius: 25px;
+}
+ul li{
+    display: inline-block;
+}
+ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 30px 174px;
+    text-decoration: none;
+}  
+ul li a:hover {
+    background-color: #13222e;
+}
+
+.staffMember{
+    background-color: #DCE6E8;
+    width: 350px;
+    height: 600px;
+    display: inline-block;
+    vertical-align: left;
+    overflow: auto;
+}
+#user, #clockMod, #pointsQuote{
+    margin-top: 10px;
+    /* rounded corners */
+    border-radius: 25px;
+    padding: 20px;
+}
+#user{
+    background-color: #364756;
+    height: 100px;
+    width: 100% auto;
+}
+#user h2, #pointsQuote h2, #pointsQuote p{
+    color: whitesmoke;
+}
+#pointsQuote p{
+    margin-top: 5px;
+}
+#clockMod{
+    background-color: #364756;
+    height: 160px;
+    width: 100% auto;
+}
+#pointsQuote{
+    background-color: #364756;
+    height: 340px;
+    width:  100% auto;
+}
+.dailyUpdate{
+    background-color: #364756;
+    height: 532px;
+    width: 960px;
+    display: inline-block;
+    vertical-align: top;
+    vertical-align: right;
+    margin-left: 5px;
+    text-align: center;
+    overflow: auto;
+    border-radius: 25px;
+    margin-top: 10px;
+}
+.dailyUpdate h2 {
+    color: whitesmoke;
+    margin-left: 15px;
+}
+label{
+    display: block;
+}
+
+#manualTimer{
+    background-color: yellowgreen;
+    height: 300px;
+    width: 300px;
+    position: absolute;
+    top:20%;
+    right:0;
+    left:0;
+    margin:-50px auto 0 auto;
+}
+#search-bar{
+    display: inline-block;
+    margin-left: 420px;
+    width: 300px;
+}
+.dailyUpdate h2{
+    display: inline-block;
+    margin-left: 20px;
+    padding-top: 20px;
+    padding-bottom: 35px;
+}
+.dailyUpdate #addEmployee{
+    width: 100px;
+    margin-left: 62px;
+    margin-bottom: 10px;
+    display: block;
+}
+#tableD{    
+    background-color: #364756;
+    color: whitesmoke;
+    display: inherit;
+    margin-top: 10px;
+    table-layout: fixed;
+
+}
+#tableD tr:nth-child(even) {
+    background-color: #182A39;
+}
+#tableD tr:hover {
+    background-color: #DCE6E8;
+    color: #182a39;
+}
+/* table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    display: block;
+} */
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+#ae-employee{
+    background-color: #304250;
+    height: 400px;
+    width: 920px;
+    position: absolute;
+    top:20%;
+    right:0;
+    left:0;
+    margin:-50px auto 0 auto;
+    border-radius: 25px;
+    /* text-align: center; */
+    border-style: solid;
+}
+#ae-employee #wholeForm{
+    display: inline-block;
+    width: 660px;
+    height: 300px;
+    background-color: #364756;
+    margin-top: 10px;
+    margin-left: 10px;
+    border-style: solid;
+    border-color: black;
+    border-radius: 25px;
+}
+#ae-employee #person{
+    text-align: center;
+    background-color: #364756;
+    width: 200px;
+    height: 300px;
+    display: inline-block;
+    margin-left: 15px;
+    vertical-align: top;
+    border-style: solid;
+    border-color: black;
+    border-radius: 25px;
+}
+#ae-employee #person{
+    color: whitesmoke;
+}
+#ae-employee button{
+    display: block;
+    margin-top: 10px;
+    margin-left: 810px;
+    width: 100px;
+    height: 20px;
+}
+#ae-employee #eform{
+    padding-left: 10px;
+    width: 300px;
+    height: 300px;
+    display: inline-block;
+    background-color: #364756;
+    color: whitesmoke;
+    
+}
+#ae-employee ul li{
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+}
+#ae-employee ul{
+    text-align: center;
+}
+#ae-employee #pform{
+    margin-left: 10px;
+    padding-left: 10px;
+    width: 300px;
+    height: 250px;
+    display: inline-block;
+    background-color: rgb(199, 109, 109);
+}
+#ae-employee  #subButton{
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 485px;
+    width: 150px;
+}
+
+.dailyUpdate table #editB{
+    display: inline-block;
+    margin-left: 20px;
+    width: 40px;
+}
+.dailyUpdate table #addB{
+    display: inline-block;
+    width: 25px;
+}
+.awardModelViewer{
+    width: 600px;
+    height: 300px;
+    background-color: #304250;
+    position: absolute;
+    top: 17%;
+    right:55%;
+    left: 20%;
+    border-style: solid;
+    border-color: black;
+    border-radius: 25px;
+    /* margin: -50px auto -50 auto; */
+    color: whitesmoke;
+}
+.awardModelViewer #info{
+    text-align: center;
+    display: inline-block;
+    
+    width: 240px;
+    height: 290px;
+    border-radius: 25px;
+    
+}
+.awardModelViewer #pointsForm{
+    text-align: left;
+    display: inline-block;
+    
+    width: 270px;
+    height: 290px;
+    vertical-align: top;
+    border-radius: 25px;
+    
+}
+.awardModelViewer button{
+    vertical-align: top;
+    width: 50px;
+    height: 25px;
+    margin-top: 10px;
+}
+.awardModelViewer #info #pointFeed{
+    margin-top: 10px;
+}
+.awardModelViewer #info p{
+    margin-top: 40px;
+}
+.awardModelViewer #pointsForm h2{
+    margin-top: 40px;
+}
+.awardModelViewer #pointsForm input, textarea{
+    margin-top: 15px;
+}
+.awardModelViewer #pointsForm h2, input, textarea{
+    margin-left: 25px;
+    display: block;
+}
+.awardModelViewer #pointsForm #subButton{
+    margin-left: 145px;
+    width: 50px;
+}
+
+#wholeForm{
+    display: inline-block;
+}
+#newAccountFeedBack{
+    width: 320px;
+    height: 300px;
+    background-color: #364756;
+    display: inline-block;
+    vertical-align: top;
+    text-align: top;
+    border-radius: 25px;
+}
+#feed{
+    background-color: #DCE6E8;
+    color: #182A39;
+    display: block;
+    text-align: center;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+#subButtonAcc{
+    display: block;
+    width: 100px;
+    margin-left: 600px;
+    margin-top: 10px;
+    border-radius: 25px;
+}
+.previousDay{
+    background-color: grey;
+    height: 160px;
+    width: 350px;
+    display: none;
+    visibility: hidden;
+    position: absolute;
+}
+@media screen and (min-width: 1199px) and (max-width: 1355px){
+    .dailyUpdate{
+        width: 770px;
+    }
+}
+@media screen and (min-width: 300px) and (max-width: 759px){
+    ul li a{
+        padding: 16px 90px;
+    }
+    .staffMember{
+        width: 100%;
+        height: 100%;
+    }
+    .dailyUpdate{
+        margin-left: 0px;
+        height: 100%;
+        width: 100%;
+    }
+    #pointsQuote{
+        height: 100%;
+    }
+    .dailyUpdate #addEmployee{
+        margin-left: 5px;
+        display: block;
+    }
+    #ae-employee{
+        text-align: center;
+        width: 100%;
+        height: 597px;
+        background-color: indigo;
+        top: 13%;
+    }
+    #ae-employee #person{
+        display: block;
+        width: 100%;
+        height: 140px;
+        margin-left: 0px;
+    }
+    #ae-employee #wholeForm{
+        display: block;
+        width: 100%;
+        height: 316px;
+        margin-left: 0px;
+    }
+    #newAccountFeedBack{
+        height: 40px;
+        width: 100%;
+        overflow-x: auto;
+    }
+    #ae-employee #eform{
+        width: 100%;
+        margin-right: 0px;
+        text-align: left;
+        padding-left: 0px;
+        margin-right: 0px;
+    }
+    #ae-employee button{
+        margin-left: 127px;
+        margin-bottom: 10px;
+        height: 25px;
+    }
+    #ae-employee ul{
+        text-align: left;
+    }
+    #ae-employee ul li{
+        display: block;
+        margin-left: 74px;
+    }
+    
+    #subButtonAcc{
+        margin-left: 128px;
+        height: 25px;
+        margin-top: 35px;
+    }
+    .awardModelViewer{
+        width: 100%;
+        height: 470px;
+        right: 0px;
+        left: 0px;
+        text-align: center;
+    }
+    .awardModelViewer #pointsForm{
+        width: 100%;
+        height: 231px;
+    }
+    .awardModelViewer #info{
+        width: 100%;
+        height: 195px;
+    }
+    .awardModelViewer #pointsForm{
+        text-align: center;
+    }
+    .awardModelViewer #reason{
+        display: block;
+        margin-left: 106px;
+        margin-top: 15px;
+    }
+    .awardModelViewer #subPoint{
+        display: inline;
+    }
+    .awardModelViewer button{
+        width: 94px;
+        height: 28px;
+    }
+}
+@media screen and (min-width: 1199px) and (max-width: 1355px){
+    .dailyUpdate{
+        width: 770px;
+    }
+}
+@media screen and (min-width: 760px) and (max-width: 1200px){
+    .staffMember{
+        width: 100%;
+        height: 250px;
+        display: block;
+    }
+    .dailyUpdate{
+        margin-left: 0px;
+        width: 100%;
+    }
+    .dailyUpdate #addEmployee{
+        display: block;
+        margin-left: 10px
+    }
+    #ae-employee{
+        width: 100%;
+        height: 541px;
+        text-align: center;
+    }
+    #ae-employee button{
+        display: initial;
+        margin-left: 0px;
+        margin-bottom: 5px;
+    }
+    #ae-employee #person{
+        width: 100%;
+        margin-left: 0px;
+        height: 126px;
+    }
+    .awardModelViewer{
+        right: 0px;
+        top: 26%;
+        left: 18%;
+        height: auto;
+    }
+    .awardModelViewer #pointsForm, .awardModelViewer #info{
+        height: 210px;
+    }
+    
+}

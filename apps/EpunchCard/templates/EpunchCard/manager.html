@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    {% load static %}
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel = "styleSheet" type ="text/css" href="{% static 'EpunchCard/managerStyle.css' %}" id = "dashCss">
+    <script type="text/javascript">
+        function changer(){
+            var dashClockBox = document.getElementById("clockMod");
+            var managerLinks = document.getElementsByClassName("managerLinks");
+            var managerContent = document.getElementsByClassName("dailyUpdate");
+            var dashLinks = document.getElementsByClassName("dashLinks");
+            var dashData = document.getElementsByClassName("data");
+            var changeCss = document.getElementById("dashCss");
+            // Hide main dashboard for manager Dashbaord
+            // change the css
+            // hide
+            // show
+            console.log(dashClockBox);
+            if (dashLinks[0].style.display == "none" && dashData[0].style.display == "none"){
+                changeCss.setAttribute("href", "{% static 'EpunchCard/dashStyle.css' %}");
+                dashLinks[0].setAttribute("style", "display: block; visibility: visible;");
+                dashData[0].setAttribute("style", "display: inline-block; visibility: visible;");
+                dashClockBox.setAttribute("style", "display: inline-block; visibility: visible;");
+                managerLinks[0].setAttribute("style", "display: none; visibility: hidden;");
+                managerContent[0].setAttribute("style", "display: none; visibility: hidden;");
+                console.log("the css for main dashboard, ", changeCss);
+            }
+            else{
+                // If it doesn't have none then make dashboard invisible
+                changeCss.setAttribute("href", "{% static 'EpunchCard/managerStyle.css' %}");
+                console.log("The ccs for manager, ", changeCss);
+                dashLinks[0].setAttribute("style", "display: none; visibility: hidden;");
+                dashData[0].setAttribute("style", "display:none; visibility: hidden;");
+                dashClockBox.setAttribute("style", "display: none; visibility: hidden;");
+                managerLinks[0].setAttribute("style", "display: block; visibility: visible;");
+                managerContent[0].setAttribute("style", "display: inline-block; visibility: visible;");
+            }
+        }
+    </script>
+</head>
+<body onload="myFunction()">
+    <div class = "wrapper">
+        <ul class = "managerLinks">
+            <li><a id = "dash" href="/dashboard" >Manage Employee</a></li>
+            <li><a href="/dailyUpdate">Daily Update</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+        <ul class = "dashLinks" style = "display: none; visibility: hidden" >
+            <li><a href="/dashboard" >Clock In/Out</a></li>
+            <li><a href="/dailyReport">Daily Report</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+        <div class = "staffMember">
+            <div id = "user" >
+                <h2>Welcome to the Dashboard {{ name }}</h2>
+                <button width = "60" height = "50" id = "magicButton" onclick="changer()" >Admin View</button>
+            </div>
+            <div id = "clockMod" >
+                <button>Clock in/out</button>
+            </div>
+            <div id = "pointsQuote" >
+                <h2>My Points</h2>
+                <h2>Village Points</h2>
+                <p>Happies lies not in the mere passion of money,
+                    but in the joy of achievement, in the thrill of
+                    creative effort - Franklin Roosevelt
+                </p>
+            </div>
+        </div>
+        <div class = "data" style = "display: none; visibility: hidden">
+            <div id = "dateFunction" >
+                <h2>Clock In/Out</h2>
+                <select id = "dates">
+                    <option value="volvo">volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select> 
+                <select id = "employee">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+            </div>
+            <div style="overflow-x:auto;" id = "tableD">
+                <table>
+                    <tr>
+                        <th>Date</th>
+                        <th>Clock-In</th>
+                        <th>Clock-out</th>
+                        <th>Time Spent</th>
+                        <th>Points Earned</th>
+                        <th>Task Description</th>
+                    </tr>
+                    <tr>
+                        <td>5/15/2019</td>
+                        <td>1400</td>
+                        <td>2230</td>
+                        <td>8</td>
+                        <td>33</td>
+                        <td>Drew blood from alot of patients.</td>
+                    </tr>
+                    <tr>
+                        <td>7/25/2019</td>
+                        <td>0500</td>
+                        <td>1330</td>
+                        <td>8</td>
+                        <td>45</td>
+                        <td>Did lots of send outs, as well as answered many phone calls</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class = "dailyUpdate">
+            <h2>Manage Employee</h2>
+            <!-- displays div edit/add employee -->
+            <!-- when clicked, setAttribute add to form action   -->
+            <button id = "addEmployee" onclick="showOrHide('/add')" >Add</button>
+            <div style="overflow-x:auto;" id = "tableD">
+                <table>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Email Address</th>
+                        <th>Joined Date</th>
+                        <th>Current Points</th>
+                        <th>Points Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>Demilo Alanis</td>
+                        <td>chickenBalls26@memorialcare.org</td>
+                        <td>01/22/18</td>
+                        <td>245</td>
+                        <td>2.5</td>
+                        <!-- Had to create another table. Button taking up to much space -->
+                        <td>
+                            <button id = "addB" onclick="awardForm('awardModelViewer')"type="button" title="Add Extra Points" >+</button>
+                            <!-- When clicking edit, will set attribute edit to form action -->
+                            <button id = "editB" type= "button" onclick = "showOrHide('/edit')" title="Edit">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Edgar Bolivar</td>
+                        <td>yoda27@coolghosts@yahoo.com</td>
+                        <td>05/30/18</td>
+                        <td>132</td>
+                        <td>3.5</td>
+                        <td>buttons here</td>
+                    </tr>
+                    <tr>
+                        <td>David Perez</td>
+                        <td>computerFreak6Car@gmail.com</td>
+                        <td>04/14/19</td>
+                        <td>69</td>
+                        <td>1.2</td>
+                        <td>buttons here</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div id = "ae-employee" style = "display: none; visibility: hidden">
+            <button onclick="showOrHide('ae-employee')" >Exit</button>
+            <div id = "person" >
+                <h1>Image here if needed</h1>
+                <h2>Name here</h2>
+                <h3>Email here</h3>
+            </div>
+            <div id = "wholeForm">
+                <form style="display: inline-block;" id = "employeeForm" action="/add" method="POST" >
+                    {% csrf_token %}
+                    <ul id = "eform">
+                        <li><label for = "firstName">First Name: <input type="text" name = "firstName" ></label></li>
+                        <li><label for = "lastName">Last Name: <input type="text" name = "lastName" ></label></li>
+                        <li><label for = "email">Email: <input type = "text" name = "email"></label></li>
+                        <li><label for = "role">Role:  <input type= "text" name = "role"></label></li>
+                        <li><label for = "dJoined">Date Joined: <input type = "date" name = "dJoined" ></label></li>
+                    </ul>
+                    <ul id = "pform">
+                        <li><label for = "prate">Points Rate: <input type="text" name = "rate" ></li>
+                        <li><label for = "cpoint">Current Points: <input type="text" name = "point" ></li>
+                        <li><label for = "eDate">Effective Date: <input type="text" name = "date" ></li>
+                    </ul>
+                    <input type="submit" id = "subButton" value="Submit">
+                </form>
+            </div>
+        </div>
+        <div class = "awardModelViewer" style = "display: none; visibility: hidden">
+            <div id = "info">
+                <p>Image Here</p>
+                <h2>Rick Sanchez</h2>
+                <h4>jojosBizareAdventer@gmail.com</h4>
+            </div>
+            <div id = "pointsForm" >
+                <form  action = "/login" method = "POST">
+                    {% csrf_token %}
+                    <h2>Award Extra Points</h2>
+                    <input type="text" name="points" id="points" placeholder="Points Value">
+                    <textarea rows="3" cols="22" name="reason" placeholder = "Reason for Adding" ></textarea>
+                    <input type="submit" id = "subButton" value="Add">
+                </form>
+            </div>
+            <button onclick="awardForm('awardModelViewer')" >Exit</button>
+        </div>
+    </div>
+    
+</body>
+<script type = "text/javascript" >
+    // Close/Open form is must have own function for exist simplicity
+    function awardForm(theForm) { 
+        var FormViewer =  document.getElementsByClassName(theForm);
+        console.log("viewUpdate was hit ", FormViewer[0] );
+        if (FormViewer[0].style.display === "none"){
+            FormViewer[0].setAttribute("style", "display:block; visibility: visible;");
+        } else{
+            FormViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+        }
+    };
+</script>
+<script type = "text/javascript">
+    //Poisioned at bottom of file because of code flow
+    // passed variable string from onclick and uses string to fetch id
+    function showOrHide(form) {
+        var eBox = document.getElementById("ae-employee");
+        var clockBox = document.getElementById("clockMod");
+        console.log("show id of div", eBox);
+        if (eBox.style.display === "none") {
+            console.log("it worked");
+            eBox.setAttribute("style", "display: Block; visibility: visible;");
+        } else {
+            console.log("else was used");
+            eBox.setAttribute("style", "display: none; visibility: hidden;");
+        }
+        // variable form will have data string of either /edit or /add
+        if (form === "/edit" || form === "/add"){
+            $("#employeeForm").attr("action", form);
+        }
+        var formDetails = document.getElementById("employeeForm").innerHTML;
+    }
+</script>
+</html>

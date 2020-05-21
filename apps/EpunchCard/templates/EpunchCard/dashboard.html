@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    {% load static %}
+    <!-- load js for converting variables to json -->
+    <script src = "{% static 'EpunchCardJS/jquery-3.4.1.min.js' %}"></script>
+    <script src = "{% static 'EpunchCardJS/moment.js' %}"></script>
+
+    <link rel = "styleSheet" type ="text/css" href="{% static 'EpunchCard/dashStyle.css' %}" id = "dashCss">
+    
+    <script type="text/javascript">
+        function changer(){
+            var dashClockBox = document.getElementById("clockMod");
+            var managerLinks = document.getElementsByClassName("managerLinks");
+            var managerContent = document.getElementsByClassName("dailyUpdate");
+            var dashLinks = document.getElementsByClassName("dashLinks");
+            var dashData = document.getElementsByClassName("data");
+            var changeCss = document.getElementById("dashCss");
+            var buttonVal = document.getElementById("magicButton")
+            var yesterDaybut = document.getElementById("checkYesterDay");
+            // Hide main dashboard for manager Dashbaord
+            // change the css
+            // hide
+            // show
+            if (dashLinks[0].style.display == "none" && dashData[0].style.display == "none"){
+                changeCss.setAttribute("href", "{% static 'EpunchCard/dashStyle.css' %}");
+                dashLinks[0].setAttribute("style", "display: block; visibility: visible;");
+                dashData[0].setAttribute("style", "display: inline-block; visibility: visible;");
+                dashClockBox.setAttribute("style", "display: inline-block; visibility: visible;");
+                // clockMod div shrinks if no block present
+                document.getElementById("clockMod").setAttribute("style", "display: block");
+                managerLinks[0].setAttribute("style", "display: none; visibility: hidden;");
+                managerContent[0].setAttribute("style", "display: none; visibility: hidden;");
+                console.log("the css for main dashboard, ", changeCss);
+                buttonVal.innerHTML = "Admin View";
+            }
+            else{
+                // If it doesn't have none then make dashboard invisible
+                buttonVal.innerHTML = "Staff View";
+                changeCss.setAttribute("href", "{% static 'EpunchCard/managerStyle.css' %}");
+                console.log("The ccs for manager, ", changeCss);
+                dashLinks[0].setAttribute("style", "display: none; visibility: hidden;");
+                dashData[0].setAttribute("style", "display:none; visibility: hidden;");
+                dashClockBox.setAttribute("style", "display: none; visibility: hidden;");
+                yesterDaybut.setAttribute("style", "display: none; visibility: hidden");
+                managerLinks[0].setAttribute("style", "display: block; visibility: visible;");
+                managerContent[0].setAttribute("style", "display: inline-block; visibility: visible;");
+            }
+        }
+    </script>
+    <script type = "text/javascript">
+        window.addEventListener('scroll',function() {
+            //When scroll change, you save it on localStorage.
+            localStorage.setItem('scrollPosition',window.scrollY);
+        },false);
+
+        window.addEventListener('load',function() {
+            if(localStorage.getItem('scrollPosition') !== null)
+            window.scrollTo(0, localStorage.getItem('scrollPosition'));
+        },false);
+        
+        // getCookie for ajax header, used for embed and verify cookie
+        function getCookie(c_name){
+            if (document.cookie.length > 0) {
+                    c_start = document.cookie.indexOf(c_name + "=");
+                    if (c_start != -1) {
+                        c_start = c_start + c_name.length + 1;
+                        c_end = document.cookie.indexOf(";", c_start);
+                        if (c_end == -1) c_end = document.cookie.length;
+                            return unescape(document.cookie.substring(c_start,c_end));
+                    }
+            }  
+            return "";
+        }
+        
+        function clock(){
+            status = document.getElementById("clocker").innerHTML;
+            // Checking for clock out status to add a description and calculate time diff
+            if (status == "Clock Out") {
+                desc = document.getElementById("desc").value;
+                $.ajax({
+                    url: "addDesc",
+                    type: "POST",
+                    headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                    data: {"myDesc" : desc},
+                    success: function(serverResponse) {
+                        var currentUserPoints = document.getElementById("myPoints").innerHTML;
+                        var allPoints = document.getElementById("allPoints").innerHTML;
+                        console.log("heres the innerHtml, ",currentUserPoints, " ", allPoints);
+                        console.log("success with adding description", serverResponse);
+
+                        document.getElementById("cTimeB").innerHTML = serverResponse.clockOut;
+                        document.getElementById("spendT").innerHTML = serverResponse.timeSpent;
+                        document.getElementById("tableDesc").innerHTML = serverResponse.desc;
+                        document.getElementById("desc").setAttribute("style", "display: none; visibility: hidden");
+                        document.getElementById("clocker").disabled = true;
+                        document.getElementById("clocker").innerHTML = "Day Completed";
+                        document.getElementById("myPoints").innerHTML = (parseFloat(currentUserPoints) + serverResponse.points).toFixed(1);
+                        document.getElementById("allPoints").innerHTML = (parseFloat(allPoints) + serverResponse.points).toFixed(1);
+                    },
+                    failure: function(err){
+                        console.log("ajax has an error", err);
+                    }
+                })
+            }
+            else {
+                $.ajax({
+                    url: 'timer',
+                    type: 'POST',
+                    headers: { "X-CSRFToken": getCookie("csrftoken") },
+                    success: function(serverResponse) {
+                        console.log("success ajax", serverResponse);
+                        // clockButt = document.getElementById("clocker").innerHTML = serverResponse;
+                        todayDate = document.getElementById("date").innerHTML
+                        moddedCurrentDate = todayDate.replace(/\s+/g, '');
+                        if (moddedCurrentDate.length == 0){
+                            console.log("if is being hit");
+                            document.getElementById("date").innerHTML = serverResponse.date;
+                            document.getElementById("cTimeA").innerHTML = String(serverResponse.clockIn);
+                            document.getElementById("cTimeB").innerHTML = "None";
+                            document.getElementById("spendT").innerHTML = "None";
+                            document.getElementById("tableDesc").innerHTML = "None";
+                            document.getElementById("points").innerHTML = serverResponse.points;
+                            // display txt box to input desc data and submit only when input is used
+                            document.getElementById("clocker").innerHTML =  "Clock Out";
+                            document.getElementById("clocker").disabled = true;
+                            document.getElementById("desc").setAttribute("style", "display: block; visibility: visible");
+                            
+                        }
+                        
+                        else {
+                            console.log("Can't Submit, Day is already completed. (No More clock ins)");
+                        };
+                        // incase it is not visible and user wants to clock in/out
+                        document.getElementById("eNameSelector").reset();
+                        document.getElementById("currentUserData").setAttribute("style", "display: inline-block; visibility: visible;");
+                        document.getElementById("otherEmployeeClocks").setAttribute("style", "display: none; visibility: hidden;");
+
+                    },
+                    failure: function() { 
+                        console.log('Got an error dude', error);
+                    },
+                })
+            }
+        }
+        function ChosenEmployee(){
+            var EmpName = [document.getElementById("dates").value, document.getElementById("employee").value];
+            console.log(EmpName);
+            $.ajax({
+                url: 'search',
+                type: 'POST',
+                data: {"getData[]": EmpName},
+                headers: { "X-CSRFToken" : getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    // console.log("sucess From Name choosing", serverResponse);
+                    // globe variables for clearing table and adding to it
+                    var otherEmployeeData = document.getElementById("otherEmployeeClocks");
+                    var currentTR = otherEmployeeData.getElementsByTagName("tr");
+
+                    function removeNull(item){
+                        if (JSON.stringify(item) == "null"){
+                            item = "None"
+                            console.log(item, "from function removeNull")
+                            return item
+                        }
+                        else{
+                            return item
+                            console.log(item, "from function removeNUll")
+                        }
+                    }
+                    function clearTable(item){
+                        var rowCount = item.rows.length;
+                        for (var x=rowCount-1; x>0; x--) {
+                            item.deleteRow(x);
+                        }       
+                    }
+                    clearTable(otherEmployeeData)
+                    
+                    for(var i = 0; i < serverResponse.length; i++) {
+                        var clock = serverResponse[i];
+                        console.log(clock.date, "This is a print");
+                        console.log(EmpName, "<>", document.getElementById("cName").innerHTML)
+                        if (EmpName != document.getElementById("cName").innerHTML){
+                            
+                            var tr = document.createElement("tr");
+                            tr.innerHTML = "<td>" + clock.date + "</td><td>" + clock.clockIn + "</td><td>" + removeNull(clock.clockOut) + "</td><td>" + removeNull(clock.timeSpent) + "</td><td>" + removeNull(clock.points) + "</td><td>" + removeNull(clock.desc) + "</td>";
+                            otherEmployeeData.appendChild(tr);
+                            
+                            document.getElementById("currentUserData").setAttribute("style", "display: none; visibility: hidden;");
+                            document.getElementById("otherEmployeeClocks").setAttribute("style", "display: inline-block; visibility: visible;");
+                            
+                        }
+                        else{
+                            document.getElementById("currentUserData").setAttribute("style", "display: inline-block; visibility: visible;");
+                            document.getElementById("otherEmployeeClocks").setAttribute("style", "display: none; visibility: hidden;");
+                            
+                        }
+                        
+                    }
+                },
+                failure: function() {
+                    console.log("error");
+                }
+                
+            })
+        };
+        function subRequestPoint(employee, point){
+            var staffData = [employee, point];
+            console.log("staffData," , staffData);
+            console.log("point" + point);
+            $.ajax({
+                url: 'totalPoint',
+                type: 'POST',
+                data: {"getData[]": staffName},
+                headers: { "X-CSRFToken" : getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    console.log("here is the response: ", serverResponse)
+                },
+                failure: function(){
+                    console.log("there was an issue with ajax")
+                }
+            });
+        }
+        function addAccount(){
+            var freshStaffName = document.getElementsByName("name")[0].value;
+            var freshStafftitle = document.getElementsByName("title")[0].value;
+            var freshStaffEmail = document.getElementsByName("email")[0].value;
+            var freshStaffPass = document.getElementsByName("password")[0].value;
+            var freshStaffConfirm = document.getElementsByName("confirm_password")[0].value;
+            var allInputs = [freshStaffEmail, freshStaffName, freshStaffPass, freshStafftitle, freshStaffConfirm]
+            $.ajax({
+                url:'/add',
+                type: 'POST',
+                data: {"getData[]" : allInputs},
+                headers: { "X-CSRFToken" : getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    console.log("here is the response for addAccount: ", serverResponse)
+                    document.getElementById("feed").innerHTML = serverResponse[0];
+                
+                },
+                failure: function(){
+                    console.log("there was an issue with ajax")
+                }
+            });
+        }
+        function subEdit (staffData){
+            var staffTitle = document.getElementsByName("title")[0].value;
+            var staffName = document.getElementsByName("name")[0].value;
+            var staffEmail = document.getElementsByName("email")[0].value;
+            var staffpass = document.getElementsByName("password")[0].value;
+            var staffConfirmPass = document.getElementsByName("confirm_password")[0].value;
+            var editInput = [staffTitle, staffName, staffEmail, staffpass, staffConfirmPass, staffData];
+
+            $.ajax({
+                url: '/edit',
+                type: 'POST',
+                data: {"getData[]": editInput},
+                headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                success: function(serverResponse){
+                    var feed = document.getElementById("feed");
+                    feed.innerHTML = "";
+                    for(var i = 0; i < serverResponse.length; i++){
+                        var editErr = serverResponse[i];
+                        var li = document.createElement("li");
+
+                        li.innerHTML = editErr
+                        feed.appendChild(li);
+                    }
+                },
+                failure: function() {
+                    console.log("failure was hit from subEdit ajax");
+                }
+            })
+        }
+        function checkYesterDay(){
+            $.ajax({
+                url: '/checkClockOut',
+                type: 'POST',
+                headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                success: function(serverResponse){
+                    document.getElementById("yesterDayFeed").innerHTML = "Yesterday you clocked in at " + serverResponse[0]
+                    // Fills drop down menu with array
+                    if (serverResponse[1] != false){
+                        document.getElementsByClassName("previousDay")[0].setAttribute("style", "display: inline-block; visibility: visible")
+                        // console.log(serverResponse[0])
+                        const locale = 'en';
+                        const hours = [];
+
+                        moment.locale(locale);  // optional - can remove if you are only dealing with one locale
+
+                        for(let hour = 0; hour < 24; hour++) {
+                            hours.push(moment({ hour }).format('h:mm a'));
+                            hours.push(
+                                moment({
+                                    hour,
+                                    minute: 30
+                                }).format('h:mm a')
+                            );
+                        }
+                        console.log(hours);
+
+                        addOption = function(selectbox, text, value) {
+                            var optn = document.createElement("OPTION");
+                            optn.text = text;
+                            optn.value = value;
+                            selectbox.options.add(optn);  
+                        }
+
+                        var dropdown = document.getElementById("previousDayDropBox");
+                        if (dropdown) {
+                            for (var i=0; i < hours.length;++i){    
+                                addOption(dropdown, hours[i], hours[i]);
+                            }
+                        }
+                        
+                    }
+                    else{
+                        document.getElementById("yesterDayFeed").innerHTML = serverResponse[0]
+                    }
+                },
+                failure: function() {
+                    console.log("from check yesterDay, failed for some reason");
+                }
+
+            })
+        }
+        function addPoints(){
+            var amount = document.getElementById("subPoint").value;
+            var id = document.getElementById("staff_id").value;
+            var reason = document.getElementById("reason").value;
+            pointInput = [id, amount, reason]
+            $.ajax({
+                url: "/pointsManager",
+                type: 'POST',
+                data: {"getData[]" : pointInput},
+                headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                success: function(serverResponse){
+                    console.log("From add points: ", serverResponse);
+                    document.getElementById("pointFeed").innerHTML = serverResponse[0];
+                    var staffPointNameForm = document.getElementById("pointUserEmail").innerHTML;
+                    // Getting the name from the point form and using it to
+                    // call an id from the table to change its innerHTML
+                    // Had to use class, not working with id when calling
+                    document.getElementsByClassName(staffPointNameForm)[0].innerHTML = serverResponse[1]
+                },
+                failure: function() {
+                    console.log("There was an error from ajax function");
+                }
+
+            })
+        }
+        function latePunch(){
+            var descForYesterDay = document.getElementById("previousDayTextBox").value;
+            var lateTime = document.getElementById("previousDayDropBox").value;
+            var clockButton = document.getElementById("previousDayButton")
+            
+            lateData = [lateTime, descForYesterDay];
+            $.ajax({
+                url: '/latePunchOut',
+                type: 'POST',
+                data: {"getData[]" : lateData},
+                headers: {"X-CSRFToken" : getCookie("csrftoken")},
+                success: function(serverResponse){
+                    console.log(serverResponse, " This is from latePunch")
+                    clockButton.disabled = true;
+                    clockButton.innerHTML = "Day Completed";
+                    document.getElementById("previousDayDropBox").setAttribute("style", "display: none; visibility: hidden");
+                    document.getElementById("previousDayTextBox").setAttribute("style", "display: none; visibility: hidden");
+
+                },
+                failure: function (err){
+                    console.log(err, " There is an problem , from latePUnch");
+                }
+            
+            })
+        }
+    </script>
+    
+</head>
+<body>
+    
+    <div class = "wrapper">
+        <ul class = "managerLinks" style = "display: none; visibility: hidden">
+            <li><a id = "dash" href="/dashboard" style = "background: #13222e; color: white" >Manage Employee</a></li>
+            <li><a href="/dailyUpdate">Daily Update</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+        <ul class = "dashLinks" >
+            <li><a href="/dashboard" style = "background-color: #13222e; color: white" >Clock In/Out</a></li>
+            <li><a href="/dailyReport">Daily Report</a></li>
+            <li><a href="/settings">Settings</a></li>
+            <li id = "responsiveLogOut" ><a href="/logOut">Log Out</a></li>
+        </ul>
+        <div class = "staffMember">
+            <div id = "user" >
+                <h2>Welcome to the Dashboard <span id = "cName">{{ name }}</span></h2>
+                <button  height = "50" id = "magicButton" onclick="changer()" >Admin View</button>
+                <button id = "checkYesterDay" title = "Hello" onclick="checkYesterDay()">Forgot to clock out YesterDay?</button>
+                <p id = "yesterDayFeed"></p>
+            </div>
+            <div class = "previousDay" >
+                <button id = "previousDayButton" onclick="latePunch()">Clock Out</button>
+                <select id = "previousDayDropBox" >
+                    <!-- <option value = "YesterDay">YesterDay</option> -->
+                </select>
+                <textarea id = "previousDayTextBox" placeholder="Task Description" ></textarea>
+            </div>
+            <div id = "clockMod" >
+                
+                <button id = "clocker" onclick= "clock()">{{ status }}</button>
+                
+                <textarea id = "desc" rows="5" cols="20" placeholder="Task description (wireframs, eps, etc)"></textarea>
+                
+            </div>
+            <div id = "pointsQuote" >
+                <h2>My Points: <span id = "myPoints">{{villagerPoints}}</span></h2>
+                <h2>Village Points: <span id = "allPoints">{{allVillagerPoints}}</span></h2>
+                <p>Happies lies not in the mere passion of money,
+                    but in the joy of achievement, in the thrill of
+                    creative effort - Franklin Roosevelt
+                </p>
+            </div>
+        </div>
+        <div class = "data">
+            <div id = "dateFunction" >
+                <h2>Clock In/Out</h2>
+                <select id = "dates" onchange="ChosenEmployee()">
+                    <option value = "All">All</option>
+                    <option value= "thisWeek">This Week</option>
+                    <option value="lastWeek">Last Week</option>
+                    <option value="lastMonth">Last Month</option>
+                </select>
+                <form id = "eNameSelector" style="display: inline-block">
+                    <select id = "employee" onchange="ChosenEmployee()">
+                        <option value="{{name}}">{{name}}</option>
+                        {% for db in clocks %}    
+                        <option id = "empSelect" value="{{db.employee.name}}">{{db.employee.name}}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                
+            </div>
+            <div style="overflow-x:auto;" id = "tableD">
+                <table id = "currentUserData">
+                    <tr>
+                        <th>Date</th>
+                        <th>Clock-In</th>
+                        <th>Clock-Out</th>
+                        <th>Time Spent</th>
+                        <th>Points To Be Earned</th>
+                        <th>Task Description</th>
+                    </tr>
+                    <tr>
+                        <td id = "date">{{ date }}</td val>
+                        <td id = "cTimeA">{{ clockIn }}</td>
+                        <td id = "cTimeB">{{ clockOut }}</td>
+                        <td id = "spendT">{{ timeSpent }}</td>
+                        <td id = "points">{{ dbPoints }}</td>
+                        <td id = "tableDesc">{{ desc }}</td>
+                    </tr>
+                    {% for clock in wholeClock %}
+                    <tr>
+                        <td>{{clock.date}}</td>
+                        <td>{{clock.clockIn}}</td>
+                        <td>{{clock.clockOut}}</td>
+                        <td>{{clock.timeSpent}}</td>
+                        <td>{{clock.points}}</td>
+                        <td>{{clock.desc}}</td>
+                    </tr>
+                    {% endfor  %}
+                </table>
+                <table id = "otherEmployeeClocks" style= "display: none; visibility: hidden">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Clock-In</th>
+                            <th>Clock-out</th>
+                            <th>Time Spent</th>
+                            <th>Points Earned</th>
+                            <th>Task Description</th>
+                        </tr>
+                    </thead>
+                    <!-- Need an empty tr -->
+                    <tr>
+                        <td></td>
+                    </tr>
+                </table>
+                
+            </div>
+        </div>
+        <div class = "dailyUpdate" style = "display: none; visibility: hidden">
+            <h2>Manage Employee</h2>
+            <!-- displays div edit/add employee -->
+            <!-- when clicked, setAttribute add to form action   -->
+            <button id = "addEmployee" onclick="showOrHide('/add')" >Add</button>
+            <div id = "tableD">
+                <table>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Email Address</th>
+                        <th>Joined Date</th>
+                        <th>Current Points</th>
+                        <th>Points Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for employ in staff %}
+                        
+                    <tr>
+                        <td>{{employ.name}}</td>
+                        <td>{{employ.email}}</td>
+                        <td>{{employ.created_at}}</td>
+                        <td class = "{{employ.email}}">{{employ.total}}</td>
+                        
+                        
+                        <td>3.0</td>
+                        <!-- Had to create another table. Button taking up to much space -->
+                        <td>
+                            <button id = "addB" onclick="awardForm('awardModelViewer, {{employ.name}}, {{employ.id}} , {{employ.email}}')"type="button" title="Add Extra Points" >+</button>
+                            <!-- When clicking edit, will set attribute edit to form action -->
+                            <button id = "editB" type= "button" onclick = "editForm('{{employ.name}}, {{employ.id}}, {{employ.email}}')" title="Edit">Edit</button>
+                        </td>
+                        
+                    </tr>
+                    {% endfor %}
+                    
+                </table>
+            </div>
+        </div>
+        <div id = "ae-employee" style = "display: none; visibility: hidden">
+            <button onclick="showOrHide('ae-employee')" >Exit</button>
+            <div id = "person" >
+                <h2 id = "formName">Name here</h2>
+                <h3 id = "formEmail">Email here</h3>
+            </div>
+            <div id = "wholeForm">
+                <div id = "employeeForm">
+                    <div id = "newAccountFeedBack"><ul id = "feed">My feed here</ul></div>
+                    {% csrf_token %}
+                    <ul  id = "eform">
+                        <li><label for = "title">title:  <input type= "text" name = "title"></label></li>
+                        <li><label for = "name">Name: <input type="text" name = "name" ></label></li>
+                        <li><label for = "email">Email: <input type = "text" name = "email"></label></li>
+                        <li><label for = "Password">Password:  <input type= "text" name = "password"></label></li>
+                        <li><label for = "Confirm_password">Confirm Password:  <input type= "text" name = "confirm_password"></label></li>
+
+                    </ul>
+                </div>
+            </div>
+            <input type="button" onclick="addAccount()" id = "subButtonAcc" value="Submit">
+
+        </div>
+        <div class = "awardModelViewer" style = "display: none; visibility: hidden">
+            <div id = "info">
+                <p>Image Here</p>
+                <h2 id = "pointUserName">Rick Sanchez</h2>
+                <h4 id = "pointUserEmail">jojosBizareAdventer@gmail.com</h4>
+                <h3 id = "pointFeed" ></h3>
+            </div>
+            <div id = "pointsForm" > 
+                <h2>Award Extra Points</h2>
+                <input type="hidden" id = "staff_id" value = "0">
+                <input type="text" name="subPoint" id="subPoint" placeholder="Points Value">
+                <textarea rows="3" cols="22" id = "reason" name="reason" placeholder = "Reason for Adding" ></textarea>
+                <button onclick="addPoints()">Enter</button>
+                
+            </div>
+            <button onclick="awardForm('awardModelViewer')" >Exit</button>
+        </div>
+    </div>
+    
+</body>
+<script type = "text/javascript" >
+    // Close/Open form is must have own function for exist simplicity
+    function awardForm(theForm) { 
+        // looking for name within parameter
+        var nameOrform = theForm.split(",");
+        document.getElementById("staff_id").value = nameOrform[2];
+        document.getElementById("pointUserName").innerHTML = nameOrform[1];
+        document.getElementById("pointUserEmail").innerHTML = nameOrform[3];
+        
+        var FormViewer =  document.getElementsByClassName(nameOrform[0]);
+        console.log("viewUpdate was hit ", FormViewer[0] );
+        if (FormViewer[0].style.display === "none"){
+            FormViewer[0].setAttribute("style", "display:block; visibility: visible;");
+        } else{
+            FormViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+        }
+    };
+</script>
+<script type = "text/javascript">
+    //Poisioned at bottom of file because of code flow
+    // passed variable string from onclick and uses string to fetch id
+    function showOrHide(form) {
+        var eBox = document.getElementById("ae-employee");
+        var clockBox = document.getElementById("clockMod");
+        document.getElementById("feed").innerHTML = "Add New Employee";
+        console.log("show id of div", eBox);
+        if (eBox.style.display === "none") {
+            console.log("it worked");
+            eBox.setAttribute("style", "display: Block; visibility: visible;");
+        } else {
+            console.log("else was used");
+            eBox.setAttribute("style", "display: none; visibility: hidden;");
+        }
+        // variable form will have data string of either /edit or /add
+        
+    }
+    function editForm(name){
+        document.getElementById("feed").innerHTML = "Edit Form";
+        staff = name.split(",");
+        console.log("Name ", staff[0], "id", staff[1], 'email ',staff[2]);
+        document.getElementById("feed").innerHTML = "Edit Form";
+        // had to style it this way, was not working in css file.
+        document.getElementById("feed").style.textAlign = "center";
+        // changing onclick function name
+        document.getElementById("subButtonAcc").onclick = function () {subEdit(staff[1])}
+        document.getElementById("formName").innerHTML = staff[0];
+        document.getElementById("formEmail").innerHTML = staff[2];
+
+        var eFormBox = document.getElementById("ae-employee");
+        if (eFormBox.style.display === "none") {
+            eFormBox.setAttribute("style", "display: Block; visibility: visible;");
+        }
+        else{
+            eFormBox.setAttribute("style", "display: none; visibility: hidden;");
+        }
+
+    }
+</script>
+<script type="text/javascript">
+    if (document.getElementById("clocker").innerHTML == "Clock Out"){
+        document.getElementById("desc").setAttribute("style", "display: block; visibility: visible");
+        document.getElementById("clocker").disabled = true;
+    }
+    if (document.getElementById("clocker").innerHTML == "Day Completed"){
+        document.getElementById("clocker").disabled = true;
+    }
+    
+    
+</script>
+<script type="text/javascript">
+    // Here you will create a function to re-enable the clocker button when there is a change in
+    // the desc text box
+    myClockButton = document.getElementById("clocker");
+    desc = document.getElementById("desc");
+    desc.onkeyup = function() {
+        var words = desc.value;
+        noSpaceInWords = words.replace(/\s+/g, '');
+        
+        if (noSpaceInWords.length > 1){
+            myClockButton.disabled = false;
+        }
+        else{
+            myClockButton.disabled = true;
+        }
+    };
+
+    // For the previous Day box/form
+    previousDesc = document.getElementById("previousDayTextBox")
+    prevBox = document.getElementById("previousDayButton")
+    previousDesc.onkeyup = function() {
+        var yestDayDesc = previousDesc.value;
+        noSpaceInV = yestDayDesc.replace(/\s+/g, '');
+        
+        if (noSpaceInV.length > 2){
+            prevBox.disabled = false;
+        }
+        else{
+            prevBox.disabled = true;
+        }
+    };
+    function yesterdayForm (){
+        
+        var prevBox = document.getElementsByClassName("previousDay")[0];
+        if (prevBox.style.display === "none"){
+            prevBox.setAttribute("style", "display: block; visibility: visible;");
+        }
+        else{
+            prevBox.setAttribute("style", "display: none; visibility: hidden;");
+        }
+    }
+</script>
+</html>

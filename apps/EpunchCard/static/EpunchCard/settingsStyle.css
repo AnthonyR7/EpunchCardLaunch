@@ -1,0 +1,262 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.wrapper{
+   width: 100% auto;
+   background-color: #DCE6E8;
+   margin: 0px auto;
+   padding: 15px;
+   /* text-align: center; */
+   padding-top: 10px;
+   padding-bottom: 75px;
+   position: relative;
+   
+}
+button{
+    border-radius: 25px;
+}
+
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #182a39;
+    text-align: left;
+    border-radius: 25px;
+}
+.links li{
+    display: inline-block;
+}
+/* Change the link color on hover */
+.links li a:hover {
+    background-color: #555;
+    color: white;
+} 
+.links li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px 129px;
+    text-decoration: none;
+}  
+/* Change the link color to #111 (black) on hover */
+.links li a:hover {
+    background-color: #13222e;
+}
+.staffMember{
+    background-color: #DCE6E8;
+    width: 350px;
+    height: 611px;
+    display: inline-block;
+    vertical-align: left;
+    overflow: auto;
+    margin-top: 10px;
+    color: whitesmoke;
+}
+#user, #clockMod, #pointsQuote{
+    margin-top: 10px;
+    background-color: #364756;
+    /* rounded corners */
+    border-radius: 25px;
+    padding: 20px;
+    
+}
+#user{
+    height: 100px;
+    width: 100% auto;
+}
+#clockMod{
+    height: 160px;
+    width: 100% auto;
+}
+#pointsQuote{
+    height: 190px;
+    width: 100% auto;
+}
+#clockFunction{
+    background-color: yellow;
+    width: 100px auto;
+    height: 100px;
+}
+.formAndTime{
+    background-color: #364756;
+    height: 600px;
+    width: 960px;
+    display: inline-block;
+    vertical-align: top;
+    vertical-align: right;
+    margin-left: 5px;
+    text-align: center;
+    margin-top: 10px;
+    border-radius: 25px;
+    text-align: center;
+    color: whitesmoke;
+    
+}
+.PassWordChange{
+    width: 100% auto;
+    height: 350px;
+    margin-top: 100px;
+
+}
+.PassWordChange form{
+    display: inline-block;
+}
+.flashes li{
+    background-color: #364756;
+    font-size: 20px;
+    padding-top: 20px;
+    margin-left: 10px;
+}
+
+.PassWordChange h2{
+    margin-left: 135px;
+}
+#formList li{
+    background-color: #364756;
+    list-style-type: none;
+    padding: 35px;
+    text-align: right;
+}
+#formList{
+    display: inline-block;
+    margin-left: 100px;
+}
+#subButton{
+    display: block;
+    width: 100px;
+    margin-left: 370px;
+    border-radius: 25px;
+}
+.timeChange{
+    text-align: center;
+    background-color: palegreen;
+    width: 100% auto;
+    height: 250px;
+}
+.timeChange h2{
+    margin-right: 550px;
+    padding-top: 20px;
+}
+#timeZone{
+    display: inline-block;
+    margin-top: 50px;
+    margin-right: 400px;
+}
+.timeChange button{
+    display: block;
+    margin-top: 15px;
+    margin-left: 350px;
+}
+#checkYesterDay{
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: whitesmoke;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.previousDay{
+    background-color: grey;
+    height: 160px;
+    width: 350px;
+    display: none;
+    visibility: hidden;
+    position: absolute;
+}
+#previousDayButton, #previousDropBox, #previousDayTextBox{
+    display: block;
+}
+#desc{
+    display: none;
+    visibility: hidden;
+    margin-top: 10px;
+    margin-left: 70px;
+    /* text-align: left; */
+}
+#clockOutButton{
+    margin-left: 120px;
+    width: 80px;
+}
+.previousDay{
+    text-align: center;
+}
+#previousDayButton{
+    margin-left: 150px;
+}
+#previousDayTextBox{
+    margin-left: 90px;
+    margin-top: 10px;
+}
+@media screen and (min-width: 300px) and (max-width: 759px){
+    .wrapper{
+        height: 100%;
+        padding-bottom: 17px;
+    }
+    .staffMember{
+        width: 100%;
+        height: 100%;
+        padding-bottom: 15px;
+    }
+    #pointsQuote{
+        height: 100%;
+    }
+    .links li a {
+        padding: 20px 39px;
+        /* padding: 20px 60px; */
+    }
+    #responsiveLogOut{
+        margin-left: 35px;
+    }
+    #user{
+        display: block;
+    }
+    #formList{
+        margin-left: 80px;
+    }
+    .formAndTime{
+        width: 100%;
+        overflow: hidden;
+        margin-left: 0px;
+        height: 500px;
+    }
+    .PassWordChange form h2{
+        margin-left: -125px;
+        margin-top: -70px;
+    }
+    #subButton{
+        margin-left: 104px;
+    }
+}
+@media screen and (min-width: 1199px) and (max-width: 1355px){
+    .formAndTime{
+        width: 770px;
+    }
+}
+@media screen and (min-width: 760px) and (max-width: 1200px){
+    .staffMember{
+        width: 100%;
+        height: 390px;
+        display: block; 
+    }
+    .formAndTime{
+        margin-left: 0px;
+        width: 100%;
+        overflow: auto;
+    }
+    #desc{
+        margin-left: 295px;
+    }
+    #clockMod{
+        text-align: center;
+    }
+    #clockOutButton{
+        display: initial;
+        margin-left: 0px;
+    }
+}

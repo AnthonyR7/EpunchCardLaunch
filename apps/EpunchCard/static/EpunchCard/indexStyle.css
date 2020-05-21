@@ -1,0 +1,95 @@
+*{
+    margin:0px;
+    padding:0px;
+}
+.wrapper{
+   width: 795px;
+   background-color: silver;
+   margin: 0px auto;
+   padding: 15px;
+   text-align: center;
+   padding-top: 75px;
+   padding-bottom: 75px;
+   position: relative;
+   margin-top: 36px;
+}
+#regTitle{
+    margin-bottom: 10px;
+}
+#log h2{
+    padding-bottom: 10px;
+    padding-top: 10px;
+    margin-right: 50px;
+}
+#log h3{
+    padding-top: 5px;
+    padding-bottom: 10px;
+}
+#log form{
+    padding-left: 50px;
+}
+#c_email{
+    margin-right: 60px;
+}
+#reg{
+    display: flex;
+    justify-content: center;
+    background-color: grey;
+    width: 350px;
+    height: 210px;
+    margin-left: 380px;
+}
+li{
+    list-style-type: none;
+    padding-top: 15px;
+}
+
+#confirm{
+    margin-bottom: 10px;
+}
+
+ul{
+    text-align: right;
+    
+}
+#log{
+    margin: 0px auto;
+    background-color: grey;
+    text-align: center;
+}
+@media only screen and (min-width: 765px) and (max-width: 1200px){
+    .wrapper{
+        width: auto;
+        
+        padding: none;
+        
+        margin-top: 100px;
+     }
+
+}
+@media only screen and (min-width: 360px) and (max-width: 764px){
+    
+    .wrapper{
+        width: auto;
+        height: 100%;
+    }
+    #log form label{
+        display: block;
+    }
+    #c_email{
+        margin-right: 50px;
+    }
+    #log_pass{
+        margin-right: 70px;
+        margin-top: 25px;
+    }
+    #submitButton{
+        height: 35px;
+        width: 70px;
+        margin-right: 38px;
+        margin-top: 31px;
+    }
+    #log h3{
+        margin-top: 25px;
+    }
+}

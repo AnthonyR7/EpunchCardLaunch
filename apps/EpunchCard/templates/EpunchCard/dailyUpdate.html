@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Daily Update</title>
+    {% load static %}
+    <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script> 
+    <link rel = "styleSheet" type ="text/css" href="{% static 'EpunchCard/dUpdateStyle.css' %}" id = "manager">
+    <script>
+        // When reload happens, scroll position stays the same
+        window.addEventListener('scroll',function() {
+                //When scroll change, you save it on sessionStorage.
+                sessionStorage.setItem('scrollPosition',window.scrollY);
+            },false);
+
+        window.addEventListener('load',function() {
+            if(sessionStorage.getItem('scrollPosition') !== null)
+            window.scrollTo(0, sessionStorage.getItem('scrollPosition'));
+        },false);
+
+        function getCookie(c_name){
+            if (document.cookie.length > 0) {
+                    c_start = document.cookie.indexOf(c_name + "=");
+                    if (c_start != -1) {
+                        c_start = c_start + c_name.length + 1;
+                        c_end = document.cookie.indexOf(";", c_start);
+                        if (c_end == -1) c_end = document.cookie.length;
+                            return unescape(document.cookie.substring(c_start,c_end));
+                    }
+            }  
+            return "";
+        }
+        function ChosenEmployee(){
+            var EmpName = [document.getElementById("dates").value, document.getElementById("employee").value];
+            console.log(EmpName);
+            $.ajax({
+                url: 'reportSearch',
+                type: 'POST',
+                data: {"getData[]": EmpName},
+                headers: { "X-CSRFToken" : getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    console.log("sucess From Name choosing", serverResponse);
+                    // globe variables for clearing table and adding to it
+                    var employeeData = document.getElementById("employeeData");
+                    // var currentTR = otherEmployeeData.getElementsByTagName("tr");
+
+                    function removeNull(item){
+                        if (JSON.stringify(item) == "null"){
+                            item = "None"
+                            console.log(item, "from function removeNull")
+                            return item
+                        }
+                        else{
+                            return item
+                            console.log(item, "from function removeNUll")
+                        }
+                    }
+                    function clearTable(item){
+                        var rowCount = item.rows.length;
+                        for (var x=rowCount-1; x>0; x--) {
+                            item.deleteRow(x);
+                        }       
+                    }
+                    clearTable(employeeData)
+                    console.log(serverResponse);
+                    if (document.getElementById("employee").value == "allStaff"){
+
+                        for (var i = 0; i < serverResponse.length; i++) {
+                            staff = serverResponse[i]
+                            console.log("the reports date", staff.reports.date);
+
+                            var tr = document.createElement("tr");
+                            if (staff.reports.date == undefined){
+                                tr.innerHTML = `<td>` + staff.name + `</td><td>` + "Not reported" + `</td><td><button id = "buttonViewer" onclick = "findStaffData('`+ staff.name +','+ staff.reports.date +`')">View Update</button></td>`;
+
+                            }
+                            else{
+                                tr.innerHTML = `<td>` + staff.name + `</td><td>` + staff.reports.date + `</td><td><button id = "buttonViewer" onclick = "findStaffData('`+ staff.name +','+ staff.reports.date +`')">View Update</button></td>`;
+
+                            }
+                            employeeData.appendChild(tr);
+                        
+                        }
+                    }
+                    else {
+                        var staffMember = document.getElementById("employee").value;
+                        for (var i = 0; i < serverResponse.length; i++) {
+                        clock = serverResponse[i]
+                        var tr = document.createElement("tr");
+                        if (clock.date == undefined){
+                            tr.innerHTML = `<td>` + staffMember + `</td><td>` + "Not Reported" + `</td><td><button id = "buttonViewer" onclick = "findStaffData('` + staffMember +','+ clock.date + `')">View Update</button></td>`;
+
+                        }
+                        else{
+                            tr.innerHTML = `<td>` + staffMember + `</td><td>` + clock.date + `</td><td><button id = "buttonViewer" onclick = "findStaffData('` + staffMember +','+ clock.date + `')">View Update</button></td>`;
+
+                        }
+
+                        employeeData.appendChild(tr);
+                        }
+                    }
+                    
+                },
+                failure: function() {
+                    console.log("error");
+                }
+                
+            })
+        };
+        function findStaffData(name){
+            var updateViewer =  document.getElementsByClassName("updateViewer");
+
+            // console.log("name: ", name );
+            staff = name.split(",");
+            // console.log("sp: ", staff[0]);
+            if (staff[1] == "undefined"){
+                document.getElementById("reportNA").innerHTML = "No Reports Today";
+                updateViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+            }
+            else{
+
+                $.ajax({
+                url: 'findCurrentData',
+                type: 'POST',
+                data: {"getData[]": staff},
+                headers: { "X-CSRFToken" : getCookie("csrftoken") },
+                success: function(serverResponse) {
+                    // console.log("date: ", serverResponse.staffData[0].date);
+                    var staffReport = serverResponse.staffData[0].report;
+                    if (staffReport.Tasktoday == undefined){
+                        for (var report of staffReport){
+                            console.log("UPdatred, ", report);
+                            document.getElementById("myDate").innerHTML = serverResponse.staffData[0].date;
+                            document.getElementById("employeeName").innerHTML = serverResponse.who;
+                            document.getElementById("infoToday").innerHTML = report.Tasktoday;
+                            document.getElementById("challengeToday").innerHTML = report.challenge;
+                            document.getElementById("helpToday").innerHTML = report.advice
+                            document.getElementsByClassName("updateViewer")[0].setAttribute("style", "display:block; visibility: visible;");
+
+                        }
+                    }
+                    else{
+                        document.getElementById("myDate").innerHTML = serverResponse.staffData[0].date;
+                        document.getElementById("employeeName").innerHTML = serverResponse.who;
+                        document.getElementById("infoToday").innerHTML = staffReport.Tasktoday;
+                        document.getElementById("challengeToday").innerHTML = staffReport.challenge;
+                        document.getElementById("helpToday").innerHTML = staffReport.advice
+                        document.getElementsByClassName("updateViewer")[0].setAttribute("style", "display:block; visibility: visible;");
+
+                    }
+                    
+                },
+                failure: function(){
+                    console.log("there was an issue with findstaffdata");
+                }
+            })
+
+            }
+
+            
+        };
+    </script>
+</head>
+<div id = "includedContent" ></div>
+<body>
+    <div class = "wrapper">
+        <ul class = "links">
+            <li><a id = "dash" href="/dashboard" >Manage Employee</a></li>
+            <li><a href="/dailyUpdate" style = "background-color: #13222e; color: white">Daily Update</a></li>
+            <li><a href="/logOut">Log Out</a></li>
+        </ul>
+        <div class = "staffMember">
+            <div id = "user" >
+                <h2>Welcome to the Dashboard {{ currentUser }}</h2>
+            </div>
+            
+            <div id = "pointsQuote" >
+                <h2>My Points: {{villagerPoints}}</h2>
+                <h2>Village Points: {{allVillagerPoints}}</h2>
+                <p>Happies lies not in the mere passion of money,
+                    but in the joy of achievement, in the thrill of
+                    creative effort - Franklin Roosevelt
+                </p>
+            </div>
+        </div>
+        <div class = "dailyUpdate">
+
+            {% if messages %}
+                {% for message in messages %}
+                <h3 id = "myMessages" style = "display: block; width: 100%; color: blue;" >{{message}}</h3>
+                {% endfor %}
+            {% endif %}
+            <h2>Daily Updates <span id = "reportNA" style="color: blue"></span></h2>
+
+            <select id = "dates" onchange="ChosenEmployee()">
+                    <option value = "today"  >Today</option>
+                    <option value = "All">All</option>
+                    <option value= "thisWeek">This Week</option>
+                    <option value="lastWeek">Last Week</option>
+                    <option value="lastMonth">Last Month</option>
+
+            </select>
+            <form id = "eNameSelector" style="display: inline-block">
+                <select id = "employee"  onchange="ChosenEmployee()">
+                    <option value = "allStaff" >All Staff</option>
+                    {% for employee in everyName %}
+                    <option value="{{employee}}">{{employee}}</option>
+                    {% endfor %}
+                    <!-- {% for db in clocks %}    
+                    <option id = "empSelect" value="{{db.employee.name}}">{{db.employee.name}}</option>
+                    {% endfor %} -->
+                </select>
+            </form>
+            <div  id = "currentUserData">
+                
+                <table id = "employeeData">
+                    
+                    <tr>
+                        <th width = "300px">Employee Name</th>
+                        <th width = "300px">Date of Report</th>
+                        <th width = "300px"></th>
+                    </tr>
+                    {% for employee in emNames %}
+                
+                    <tr>
+                        <td id = "userName" >{{employee.name}}</td>
+                        <td id = "dateOfUpDate" >{{day}}</td>
+                        <td id = "{{employee.name}}"  style= "display: none; visibility: hidden;" >{{employee.report}}</td>
+                        <td><button id = "buttonViewer" onclick="showAndHideViewer('{{employee.name}}')">View Update</button></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+               
+
+            </div>
+        </div>
+        <div class = "updateViewer" style = "display: none; visibility: hidden;">
+            <div id = "employeeInfo" >
+                <h3>Daily Update - <span id = "myDate" ></span></h2>
+                <p>Image here</p>
+                <h3 id = "employeeName">Rick Sanchez</h3>
+                <button onclick="awardForm('awardModelViewer')">Award Points</button>
+            </div>
+            <div class = "employeeDesc">
+                <div id = "todayBox">
+                    <h2>What I did Today</h2>
+                    <p id = "infoToday">Lorem ipsum praesent risus porttitor at urna nisi eleifend 
+                        adipiscing senectus, neque purus rutrum habitasse eu interdum 
+                        pharetra posuere tellus fringilla fusce, suscipit arcu class 
+                        venenatis adipiscing ante venenatis aliquet facilisis.
+                    </p>
+                </div>
+                <div id = "challengeBox">
+                    <h2>Challenges I encounterd</h2>
+                    <p id = "challengeToday">Lorem ipsum praesent risus porttitor at urna nisi eleifend 
+                        adipiscing senectus, neque purus rutrum habitasse eu interdum 
+                        pharetra posuere tellus fringilla fusce, suscipit arcu class 
+                        venenatis adipiscing ante venenatis aliquet facilisis.
+                    </p>
+                </div>
+                <div id = "helpBox">
+                    <h2>What you can do to help me</h2>
+                    <p id = "helpToday">Lorem ipsum praesent risus porttitor at urna nisi eleifend 
+                        adipiscing senectus, neque purus rutrum habitasse eu interdum 
+                        pharetra posuere tellus fringilla fusce, suscipit arcu class 
+                        venenatis adipiscing ante venenatis aliquet facilisis.
+                    </p>
+                </div>
+            </div>
+            <button  id = "exitButton" onclick="showAndHideViewer('uselessString')">Exit</button>
+        </div>
+        <div class = "awardModelViewer" style = "display: none; visibility: hidden">
+            <div id = "info">
+                
+            </div>
+            <div id = "pointsForm" >
+                <form  action = "/addPoints" method = "POST" onsubmit="userName()" >
+                    {% csrf_token %}
+                    <h2>Award Extra Points</h2>
+                    <input type = "hidden" id = "staffInputDate" name = "staffInputDate" value = "0">
+                    <input type = "hidden" id = "person" name = "person" value = "0" >
+                    <input type = "text" name="points" id = "points" onkeyup = "count()" placeholder="Points Value">
+                    <textarea  type ="text" rows="3" cols="22" name="reason" id = "reason" onkeyup="count()" placeholder = "Reason for Adding" ></textarea>
+                    
+                    <input type="submit" id = "subButton" disabled = "true" value="Add">
+                </form>
+            </div>
+            <button onclick="awardForm('awardModelViewer')" >Exit</button>
+        </div>
+    </div>
+</body>
+<script type = "text/javascript" >
+    // Close/Open form is must have own function for exist simplicity
+    function awardForm(theForm) { 
+        var FormViewer =  document.getElementsByClassName(theForm);
+        console.log("viewUpdate was hit ", FormViewer[0] );
+        if (FormViewer[0].style.display === "none"){
+            FormViewer[0].setAttribute("style", "display:block; visibility: visible;");
+        } else{
+            FormViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+        }
+    };
+</script>
+<script type = "text/javascript" >
+    var current = new Date();
+    var m = String(current.getMonth() + 1);
+    var d = String(current.getDate());
+    var y = String(current.getFullYear());
+    var today = m + "-" + d + "-" + y
+    console.log(today);
+    function showAndHideViewer(item) { 
+        var updateViewer =  document.getElementsByClassName("updateViewer");
+        var award =  document.getElementsByClassName("awardModelViewer");
+        console.log("viewUpdate was hit ", updateViewer[0] );
+        if (updateViewer[0].style.display === "none"){
+            updateViewer[0].setAttribute("style", "display:block; visibility: visible;");
+        } else{
+            // To also close the award form
+            award[0].setAttribute("style", "display: none; visibility: hidden;");
+            updateViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+        }
+        if (item == "uselessString"){
+            return false
+        }
+        else{
+            employeeName = document.getElementById(item);
+            data = employeeName.innerHTML
+            if (data == "No Report today"){
+                document.getElementById("reportNA").innerHTML = data;
+                updateViewer[0].setAttribute("style", "display: none; visibility: hidden;");
+
+            }
+            else{
+                document.getElementById("reportNA").innerHTML = "";
+                console.log("No parsing, " , data);
+                console.log("Trying to parse, ", JSON.parse(data));
+                objReport = JSON.parse(data);
+                console.log("Name: ", employeeName);
+
+                console.log("MyData: ", objReport);
+                document.getElementById("infoToday").innerHTML = objReport.Tasktoday;
+                document.getElementById("challengeToday").innerHTML = objReport.challenge;
+                document.getElementById("helpToday").innerHTML = objReport.advice;
+                document.getElementById("employeeName").innerHTML = item;
+                document.getElementById("myDate").innerHTML = today;
+
+            }
+        }
+    };
+    function count(){
+        var points = document.getElementById("points").value;
+        var reason = document.getElementById("reason").value;
+        console.log("My points, ",points);
+        console.log("My Reason, ", reason.length);
+        var employeeName = document.getElementById("employeeName").innerHTML;
+        var pointSubButton = document.getElementById("subButton")
+        if (points.length !=  0 && reason.length != 0 ){
+            pointSubButton.disabled = false;
+            // from the viewer update, the name will be given to the form
+            console.log("My Name: ",document.getElementsByName("employee").value = employeeName );
+        }
+        else{
+            
+            pointSubButton.disabled = true;
+            
+
+
+        };
+
+    }
+    function userName(){
+        var dayOfInput = document.getElementById("myDate").innerHTML;
+        document.getElementById("staffInputDate").value = dayOfInput;
+        var employeeName = document.getElementById("employeeName").innerHTML;
+        document.getElementById("person").value = employeeName;
+
+        return true;
+    }
+    function displayStaffData(employeeName){
+        console.log("heres the person : ", employeeName);
+        var staffData = document.getElementById(employeeName);
+        console.log("my fut: ", staffData);
+        
+    }
+</script>
+</html>
